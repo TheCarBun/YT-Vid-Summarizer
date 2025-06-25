@@ -1,12 +1,10 @@
+import streamlit as st
 from youtube_transcript_api import YouTubeTranscriptApi
 from agno.agent import Agent
 from agno.models.google import Gemini
 from instructions import instructions
-import os
-from dotenv import load_dotenv
-load_dotenv()
 
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+GEMINI_API_KEY = st.secrets["GEMINI_API_KEY"]
 
 
 def get_transcript(video_id):
@@ -41,14 +39,22 @@ def main():
         debug_mode=True
     )
 
-    # CLI
-    while True:
-        prompt = input("You: ")
-        if prompt.lower().strip() == 'exit':
-            break
+    st.set_page_config(
+        page_icon="❓",
+        page_title="YT Vid Summarizer"
+    )
 
-        response = agent.run(prompt)
-        print(response.content)
+    st.title("❓ YouTube Video Summarizer")
+    prompt = st.text_input(
+        "YouTube Video URL", placeholder="https://www.youtube.com/watch?v=...")
+    button = st.button("Summarize")
+
+    if prompt and button:
+        with st.spinner("Fetching video transcripts and summarizing post..."):
+            response = agent.run(prompt)
+            st.markdown(response.content)
+    elif button:
+        st.info("YouTube video link pls 😑")
 
 
 if __name__ == "__main__":
