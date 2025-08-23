@@ -1,3 +1,5 @@
+# Use Proxy to hide IP. YT is blocking fetch requests since the requests are coming from a cloud provider
+
 import streamlit as st
 from youtube_transcript_api import YouTubeTranscriptApi
 from agno.agent import Agent
@@ -8,6 +10,7 @@ GEMINI_API_KEY = st.secrets["GEMINI_API_KEY"]
 
 
 def get_transcript(video_id):
+    print(">>> Transcript tool was called <<<")
     try:
         transcript_data = YouTubeTranscriptApi.get_transcript(video_id)
 
@@ -22,7 +25,7 @@ def get_transcript(video_id):
 
 def main():
     model = Gemini(
-        id="gemini-2.5-flash",
+        id="gemini-2.0-flash",
         api_key=GEMINI_API_KEY
     )
 
