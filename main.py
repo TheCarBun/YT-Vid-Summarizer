@@ -12,7 +12,12 @@ GEMINI_API_KEY = st.secrets["GEMINI_API_KEY"]
 def get_transcript(video_id):
     print(">>> Transcript tool was called <<<")
     try:
-        transcript_data = YouTubeTranscriptApi.get_transcript(video_id)
+        proxies = {
+            'http': '101.251.204.174:8080',
+            'https': '101.251.204.174:8080'
+        }
+        transcript_data = YouTubeTranscriptApi.get_transcript(
+            video_id, proxies=proxies)
 
         full_text = " ".join([item['text'] for item in transcript_data])
 
